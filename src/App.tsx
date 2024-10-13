@@ -7,10 +7,11 @@ function App() {
     return (
         <ErrorBoundary FallbackComponent={ErrorFallback}>
             <JotaiProvider>
-                <div className="App">
+                <div className="container p-12 mx-auto my-24">
                     <Suspense fallback={'Laden..'}>
                         <GithubProfile/>
                     </Suspense>
+                    <hr/>
                 </div>
             </JotaiProvider>
         </ErrorBoundary>
