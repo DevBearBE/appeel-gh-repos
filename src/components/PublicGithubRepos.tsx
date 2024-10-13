@@ -40,7 +40,7 @@ export const PublicGithubRepos = () => {
 
                         <div>
                             <button
-                                className="border border-blue-700 rounded-full w-full mb-4 px-4 py-2 text-blue-700 hover:bg-blue-700 hover:text-white"
+                                className="border border-blue-700 rounded-full w-full mb-4 px-4 py-1 text-blue-700 hover:bg-blue-700 hover:text-white"
                                 onClick={() => getCommitsForRepo(repo.owner, repo.repoName)}>
                                 Show commits
                             </button>
@@ -49,7 +49,7 @@ export const PublicGithubRepos = () => {
                                 target="_blank"
                                 rel="noopener noreferrer">
                                 <button
-                                    className="border border-blue-700 rounded-full w-full px-4 py-2 text-blue-700 hover:bg-blue-700 hover:text-white">To
+                                    className="border border-blue-700 rounded-full w-full px-4 py-1 text-blue-700 hover:bg-blue-700 hover:text-white">To
                                     github
                                 </button>
                             </a>
