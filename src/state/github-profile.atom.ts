@@ -9,4 +9,4 @@ export interface GithubProfile {
 
 }
 
-export const githubProfileAtom = atom<GithubProfile>({} as GithubProfile)
+export const githubProfileAtom = atom<GithubProfile>({} as GithubProfile);
