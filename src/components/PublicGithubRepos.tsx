@@ -30,7 +30,7 @@ export const PublicGithubRepos = () => {
     return (<div>
         <h3 className="text-lg text-blue-700 font-bold my-4">Public repositories</h3>
         {publicGithubRepos && (
-            <div className="grid grid-cols-6 gap-2 mb-1">
+            <div className="grid grid-cols-6 gap-2 mb-6">
                 {publicGithubRepos.map((repo) => (
                     <div key={repo.id} className="border rounded-2xl px-6 py-4 flex flex-col justify-between">
                         <div className="mb-6">
@@ -54,16 +54,15 @@ export const PublicGithubRepos = () => {
                                 </button>
                             </a>
                         </div>
-
                     </div>
-
                 ))}
             </div>
         )}
 
         {commitsForRepo && commitsForRepo.map((commit) => (
-            <div key={commit.id}>
-                <p>{commit.authorName} // {commit.message}</p>
+            <div key={commit.id} className="mb-2">
+                <p className="-mb-1">{commit.message}</p>
+                <span className="text-xs text-violet-400">{commit.authorName.toUpperCase()}</span>
             </div>
         ))}
     </div>)
