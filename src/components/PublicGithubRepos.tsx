@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { useErrorBoundary } from "react-error-boundary";
 import React, { useCallback, useEffect, useState } from "react";
 import { getCommitsForPublicGithubRepo, getPublicGithubRepos } from "../utils/helpers";
-import { commitsAtom, PublicGithubRepo, publicGithubReposAtom } from "../state";
+import { Commit, commitsAtom, PublicGithubRepo, publicGithubReposAtom } from "../state";
 
 export const PublicGithubRepos = () => {
     const {showBoundary} = useErrorBoundary();
@@ -10,6 +10,8 @@ export const PublicGithubRepos = () => {
     const [commitsForRepo, setCommitsForRepo] = useAtom(commitsAtom);
     const [selectedRepo, setSelectedRepo] = useState<PublicGithubRepo>({} as PublicGithubRepo);
     const [showCommits, setShowCommits] = useState<boolean>(false);
+    const [filterValue, setFilterValue] = useState<string>("");
+    const [filteredCommits, setFilteredCommits] = useState<Commit[]>([])
 
     const fetchPublicGithubRepos = useCallback(async () => {
         try {
@@ -24,14 +26,29 @@ export const PublicGithubRepos = () => {
         fetchPublicGithubRepos();
     }, []);
 
-    const getCommitsForRepo = async (repo: PublicGithubRepo) => {
+    const getCommitsForRepo = async (repo: PublicGithubRepo): Promise<void> => {
         const {owner, repoName} = repo;
         setSelectedRepo(repo);
 
         const commits = await getCommitsForPublicGithubRepo(owner, repoName);
         setCommitsForRepo(commits);
+        setFilteredCommits(commits);
 
         setShowCommits(true);
+    }
+
+    const handleBackAction = (): void => {
+        setShowCommits(false);
+        setFilterValue("");
+    }
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const inputValue = e.target.value;
+        setFilterValue(inputValue);
+
+        const filtered = commitsForRepo.filter(commit => commit.message.toLowerCase().includes(inputValue.toLowerCase()));
+
+        setFilteredCommits(filtered);
     }
 
     return (<div>
@@ -66,7 +83,7 @@ export const PublicGithubRepos = () => {
             </div>
         )}
 
-        {showCommits && commitsForRepo && (
+        {showCommits && filteredCommits && (
             <div>
                 <div className="mb-6 flex justify-between">
                     <div className="border rounded-2xl px-6 py-4">
@@ -76,13 +93,18 @@ export const PublicGithubRepos = () => {
                     <div>
                         <button
                             className="border border-sky-600 rounded-full mb-4 px-4 py-1 text-sky-600 hover:bg-sky-600 hover:text-white"
-                            onClick={() => setShowCommits(false)}>
+                            onClick={handleBackAction}>
                             Back
                         </button>
                     </div>
                 </div>
-                <h4 className="text-md font-bold mb-2">Commits</h4>
-                {commitsForRepo.map((commit) => (
+                <div className="flex justify-between">
+                    <h4 className="text-md font-bold mb-2">Commits</h4>
+                    <input className="border rounded-full px-6" type="text" value={filterValue}
+                           onChange={handleInputChange}
+                           placeholder='Enter value'/>
+                </div>
+                {filteredCommits.map((commit) => (
                     <div key={commit.id} className="mb-2">
                         <div>
                             <p className="-mb-1">{commit.message}</p>
@@ -92,7 +114,6 @@ export const PublicGithubRepos = () => {
                     </div>
                 ))}
             </div>
-        )
-        }
+        )}
     </div>)
 }
